@@ -1,12 +1,19 @@
 namespace Notepad__
 {
-    public partial class Form1 : Form
+    /*To be fixed:
+     * When doing key shortcuts, the letter gets written in the textbox.
+     * Auto resize textbox
+     */
+    public partial class FormMain : Form
     {
-        string file = "", path = "";
-        public Form1()
-        {
+        private string file = "", path = "";
+        FindForm findForm;
+        public FormMain()
+        { 
             InitializeComponent();
+            findForm = new FindForm(this);
         }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             this.KeyPreview = true;
@@ -18,13 +25,15 @@ namespace Notepad__
             {
                 case (Keys.Control | Keys.S): //ctrl + s to save
                     saveFile();
-                    
                     break;
                 case (Keys.Control | Keys.O): //ctrl + o to open
                     openFile();
                     break;
+                case (Keys.Control | Keys.F): //ctrl + f to find
+                    find();
+                    break;
             }
-            
+
 
             return base.ProcessCmdKey(ref msg, keyData);
         }
@@ -32,6 +41,11 @@ namespace Notepad__
         private void content_TextChanged(object sender, EventArgs e)
         {
             isChanged.Text = "Text: changed";
+        }
+
+        private void content_LostFocus(object sender, EventArgs e)
+        {
+            
         }
 
         //when save has been activated
@@ -59,8 +73,8 @@ namespace Notepad__
                 saveFile.Title = "Save the written content";
                 saveFile.ShowDialog();
                 path = saveFile.FileName;
-                
-                if(saveFile.FileName != "")
+
+                if (saveFile.FileName != "")
                     File.WriteAllText(saveFile.FileName, content.Text);
 
                 file = showFileNameOnly(path);
@@ -80,8 +94,8 @@ namespace Notepad__
             };
             openFile.ShowDialog();
             path = openFile.FileName;
-            if(openFile.FileName != "")
-                content.Text = File.ReadAllText(path); 
+            if (openFile.FileName != "")
+                content.Text = File.ReadAllText(path);
 
             file = showFileNameOnly(path);
             fileName.Text = "File: " + file;
@@ -92,6 +106,20 @@ namespace Notepad__
             string fileName = Path.GetFileName(pathFile);
             return fileName;
         }
+        //when find has been activated
+        private void findToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            find();
+        }
 
+        private void find()
+        {
+            findForm.Show();
+        }
+
+        public RichTextBox getContentBox()
+        {
+            return content;
+        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Notepad__
 {
-    partial class Form1
+    partial class FormMain
     {
         /// <summary>
         ///  Required designer variable.
@@ -91,21 +91,21 @@
             // openToolStripMenuItem
             // 
             openToolStripMenuItem.Name = "openToolStripMenuItem";
-            openToolStripMenuItem.Size = new Size(180, 22);
+            openToolStripMenuItem.Size = new Size(156, 22);
             openToolStripMenuItem.Text = "Open (Ctrl + O)";
             openToolStripMenuItem.Click += openToolStripMenuItem_Click;
             // 
             // saveToolStripMenuItem
             // 
             saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            saveToolStripMenuItem.Size = new Size(180, 22);
+            saveToolStripMenuItem.Size = new Size(156, 22);
             saveToolStripMenuItem.Text = "Save (Ctrl + S)";
             saveToolStripMenuItem.Click += saveToolStripMenuItem_Click;
             // 
             // quitToolStripMenuItem
             // 
             quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-            quitToolStripMenuItem.Size = new Size(180, 22);
+            quitToolStripMenuItem.Size = new Size(156, 22);
             quitToolStripMenuItem.Text = "Quit (Ctrl + Q)";
             // 
             // optionsToolStripMenuItem
@@ -120,6 +120,7 @@
             findToolStripMenuItem.Name = "findToolStripMenuItem";
             findToolStripMenuItem.Size = new Size(180, 22);
             findToolStripMenuItem.Text = "Find (Ctrl + F)";
+            findToolStripMenuItem.Click += findToolStripMenuItem_Click;
             // 
             // replaceToolStripMenuItem
             // 
