@@ -9,8 +9,4 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Remove="findForm.resx" />
-  </ItemGroup>
-
 </Project>

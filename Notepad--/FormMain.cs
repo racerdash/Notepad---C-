@@ -2,7 +2,7 @@ namespace Notepad__
 {
     /*To be fixed:
      * When doing key shortcuts, the letter gets written in the textbox.
-     * Auto resize textbox
+     * Auto resize everything
      */
     public partial class FormMain : Form
     {
@@ -19,8 +19,14 @@ namespace Notepad__
             this.KeyPreview = true;
         }
 
+        public Label getTmp()
+        {
+            return tmp;
+        }
+
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
+            bool result = base.ProcessCmdKey(ref msg, keyData);
             switch (keyData)
             {
                 case (Keys.Control | Keys.S): //ctrl + s to save
@@ -35,12 +41,15 @@ namespace Notepad__
             }
 
 
-            return base.ProcessCmdKey(ref msg, keyData);
+            return result; // ruturn 
         }
 
         private void content_TextChanged(object sender, EventArgs e)
         {
             isChanged.Text = "Text: changed";
+            this.findForm.updateCursor();
+            tmp.Text = this.findForm.getCursor().ToString();
+
         }
 
         private void content_LostFocus(object sender, EventArgs e)
