@@ -39,24 +39,26 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(54, 56);
+            label1.Location = new Point(62, 75);
             label1.Name = "label1";
-            label1.Size = new Size(63, 15);
+            label1.Size = new Size(78, 20);
             label1.TabIndex = 0;
             label1.Text = "Find word:";
             // 
             // findWord
             // 
-            findWord.Location = new Point(134, 53);
+            findWord.Location = new Point(153, 71);
+            findWord.Margin = new Padding(3, 4, 3, 4);
             findWord.Name = "findWord";
-            findWord.Size = new Size(100, 23);
+            findWord.Size = new Size(114, 27);
             findWord.TabIndex = 1;
             // 
             // findButton
             // 
-            findButton.Location = new Point(320, 52);
+            findButton.Location = new Point(366, 69);
+            findButton.Margin = new Padding(3, 4, 3, 4);
             findButton.Name = "findButton";
-            findButton.Size = new Size(75, 23);
+            findButton.Size = new Size(86, 31);
             findButton.TabIndex = 2;
             findButton.Text = "Find";
             findButton.UseVisualStyleBackColor = true;
@@ -65,9 +67,10 @@
             // top
             // 
             top.AutoSize = true;
-            top.Location = new Point(134, 153);
+            top.Location = new Point(153, 204);
+            top.Margin = new Padding(3, 4, 3, 4);
             top.Name = "top";
-            top.Size = new Size(74, 19);
+            top.Size = new Size(91, 24);
             top.TabIndex = 3;
             top.TabStop = true;
             top.Text = "From top";
@@ -76,9 +79,10 @@
             // bottom
             // 
             bottom.AutoSize = true;
-            bottom.Location = new Point(234, 153);
+            bottom.Location = new Point(267, 204);
+            bottom.Margin = new Padding(3, 4, 3, 4);
             bottom.Name = "bottom";
-            bottom.Size = new Size(96, 19);
+            bottom.Size = new Size(118, 24);
             bottom.TabIndex = 4;
             bottom.TabStop = true;
             bottom.Text = "From bottom";
@@ -87,24 +91,25 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(134, 135);
+            label2.Location = new Point(153, 180);
             label2.Name = "label2";
-            label2.Size = new Size(76, 15);
+            label2.Size = new Size(96, 20);
             label2.TabIndex = 5;
             label2.Text = "Search order:";
             // 
-            // findForm
+            // FindForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(469, 268);
+            ClientSize = new Size(547, 285);
             Controls.Add(label2);
             Controls.Add(bottom);
             Controls.Add(top);
             Controls.Add(findButton);
             Controls.Add(findWord);
             Controls.Add(label1);
-            Name = "findForm";
+            Margin = new Padding(3, 4, 3, 4);
+            Name = "FindForm";
             Text = "Find";
             ResumeLayout(false);
             PerformLayout();
