@@ -1,3 +1,8 @@
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using log4net;
+using log4net.Config;
+
 namespace Notepad__
 {
     /*To be fixed:
@@ -8,10 +13,14 @@ namespace Notepad__
     public partial class FormMain : Form
     {
         private string file = "", path = "";
+        private bool fileChanged = false;
         FindForm findForm;
         ReplaceForm replaceForm;
+        private static readonly ILog logger = LogManager.GetLogger(typeof(FormMain));
         public FormMain()
         {
+            XmlConfigurator.Configure();
+
             InitializeComponent();
             findForm = new FindForm(this);
             replaceForm = new ReplaceForm(this);
@@ -21,16 +30,62 @@ namespace Notepad__
             isChanged.Anchor = AnchorStyles.Bottom;
             content.BorderStyle = BorderStyle.None;
         }
-        private void FormMain_ResizeEnd(object sender, EventArgs e)
-        {
-            content.Size = new Size(this.Width, this.Height - 112);
-        }
-
         private void Form1_Load(object sender, EventArgs e)
         {
             this.KeyPreview = true;
         }
 
+        private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (fileChanged)
+            {
+                var result = MessageBox.Show("You haven't saved the file. Do you want to save it?", "Warning", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                switch (result)
+                {
+                    case DialogResult.Yes:
+                        if (!Data.SaveFile(this))
+                            e.Cancel = true;
+                        break;
+                    case DialogResult.Cancel:
+                        e.Cancel = true;
+                        break;
+                }
+            }
+        }
+        private void FormMain_ResizeEnd(object sender, EventArgs e)
+        {
+            content.Size = new Size(this.Width, this.Height - 112);
+        }
+
+        //Getter for the content RichTextBox
+        public RichTextBox getContentBox()
+        {
+            return content;
+        }
+        
+        //Getter for the path variable
+        public string getPath()
+        {
+            return path;
+        }
+
+        //Getter for the fileName Label
+        public Label getFileName()
+        {
+            return fileName;
+        }
+
+        //Getter for the isChanged Label
+        public Label getIsChanged()
+        {
+            return isChanged;
+        }
+
+        //Getter for the file String
+        public string getFile()
+        {
+            return file;
+        }
         public Label getTmp()
         {
             return tmp;
@@ -42,20 +97,20 @@ namespace Notepad__
             switch (keyData)
             {
                 case (Keys.Control | Keys.S): //ctrl + s to save
-                    saveFile();
+                    SaveFile();
                     result = true;
                     break;
                 case (Keys.Control | Keys.O): //ctrl + o to open
-                    openFile();
+                    OpenFile();
                     result = true;
                     break;
                 case (Keys.Control | Keys.F): //ctrl + f to find
                     find();
-                    //result = true;
+                    result = true;
                     break;
                 case (Keys.Control | Keys.R): //ctrl + r to replace
                     replace();
-                    //result = true;
+                    result = true;
                     break;
             }
             return result;
@@ -66,7 +121,7 @@ namespace Notepad__
             isChanged.Text = "Text: changed";
             this.findForm.updateCursor();
             tmp.Text = this.findForm.getCursor().ToString();
-
+            fileChanged = true;
         }
 
         private void content_LostFocus(object sender, EventArgs e)
@@ -77,20 +132,26 @@ namespace Notepad__
         //when save has been activated
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            saveFile();
+            fileChanged = !Data.SaveFile(this);
         }
 
         //when open file has been activated
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            openFile();
+            OpenFile(); 
+            
         }
 
-        private void saveFile()
+        private bool SaveFile()
         {
             if (path != "")
             {
                 File.WriteAllText(path, content.Text);
+                fileName.Text = "File: " + file;
+                isChanged.Text = "Text: saved";
+                fileChanged = false;
+
+                return true;
             }
             else
             {
@@ -101,35 +162,84 @@ namespace Notepad__
                 path = saveFile.FileName;
 
                 if (saveFile.FileName != "")
+                {
                     File.WriteAllText(saveFile.FileName, content.Text);
+                    file = showFileNameOnly(path);
+                    fileName.Text = "File: " + file;
+                    isChanged.Text = "Text: saved";
+                    fileChanged = false;
 
-                file = showFileNameOnly(path);
+                    return true;
+                }
             }
-
-            fileName.Text = "File: " + file;
-            isChanged.Text = "Text: saved";
+            return false;
         }
 
-        private void openFile()
+        private void OpenFile()
         {
             OpenFileDialog openFile = new OpenFileDialog()
             {
-                FileName = "Select a text file",
+                FileName = "",
                 Filter = "Text files|*.txt|All files|*.*",
                 Title = "Open a text file"
             };
-            openFile.ShowDialog();
-            if (path != "")
+            try
             {
-                content.Text = File.ReadAllText(path);
+                content.Text = string.Empty;
+                content.Clear();
+                content.ClearUndo();
+                openFile.ShowDialog();
                 path = openFile.FileName;
-            }
+                
+                if (path != "")
+                {
+                    content.Text = File.ReadAllText(path);
+                }
 
-            file = showFileNameOnly(path);
-            fileName.Text = "File: " + file;
+                file = showFileNameOnly(path);
+                fileName.Text = "File: " + file;
+                
+                /*if(path != "")
+                {
+                    content.Text = "";
+
+                    StringBuilder sb = new StringBuilder();
+                    using (StreamReader read = new StreamReader(path))
+                    {
+                        string line;
+
+                        while ((line = read.ReadLine()) != null)
+                        {
+                            sb.Append(line);
+                        }
+                        content.Text = sb.ToString();
+                        file = showFileNameOnly(path);
+                        fileName.Text = "File: " + file;
+           
+                        //read.Dispose();
+                        read.Close();
+
+                    }
+                }*/
+
+                //HIGHLY UNORTHODOX, I DO NOT RECOMMEND THIS, WILL BE REWRITTEN IN A NEW ENGINE SOMETIME
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+
+            } catch (OutOfMemoryException exception)
+            {
+                MessageBox.Show("File too big to be opened!", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            } catch (UnauthorizedAccessException exception)
+            {
+                MessageBox.Show("Not enough permissions to read the file!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            } catch (IOException exception)
+            {
+                MessageBox.Show("There was a problem when reading the file!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        private string showFileNameOnly(string pathFile)
+        public string showFileNameOnly(string pathFile)
         {
             string fileName = Path.GetFileName(pathFile);
             return fileName;
@@ -145,10 +255,6 @@ namespace Notepad__
             findForm.Show();
         }
 
-        public RichTextBox getContentBox()
-        {
-            return content;
-        }
 
         private void replaceToolStripMenuItem_Click(object sender, EventArgs e)
         {

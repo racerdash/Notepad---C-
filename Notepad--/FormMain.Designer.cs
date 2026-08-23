@@ -94,22 +94,22 @@
             // openToolStripMenuItem
             // 
             openToolStripMenuItem.Name = "openToolStripMenuItem";
-            openToolStripMenuItem.Size = new Size(194, 26);
+            openToolStripMenuItem.Size = new Size(224, 26);
             openToolStripMenuItem.Text = "Open (Ctrl + O)";
             openToolStripMenuItem.Click += openToolStripMenuItem_Click;
             // 
             // saveToolStripMenuItem
             // 
             saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            saveToolStripMenuItem.Size = new Size(194, 26);
+            saveToolStripMenuItem.Size = new Size(224, 26);
             saveToolStripMenuItem.Text = "Save (Ctrl + S)";
             saveToolStripMenuItem.Click += saveToolStripMenuItem_Click;
             // 
             // quitToolStripMenuItem
             // 
             quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-            quitToolStripMenuItem.Size = new Size(194, 26);
-            quitToolStripMenuItem.Text = "Quit (Ctrl + Q)";
+            quitToolStripMenuItem.Size = new Size(224, 26);
+            quitToolStripMenuItem.Text = "Quit (Alt + F4)";
             // 
             // optionsToolStripMenuItem
             // 
@@ -121,14 +121,14 @@
             // findToolStripMenuItem
             // 
             findToolStripMenuItem.Name = "findToolStripMenuItem";
-            findToolStripMenuItem.Size = new Size(209, 26);
+            findToolStripMenuItem.Size = new Size(224, 26);
             findToolStripMenuItem.Text = "Find (Ctrl + F)";
             findToolStripMenuItem.Click += findToolStripMenuItem_Click;
             // 
             // replaceToolStripMenuItem
             // 
             replaceToolStripMenuItem.Name = "replaceToolStripMenuItem";
-            replaceToolStripMenuItem.Size = new Size(209, 26);
+            replaceToolStripMenuItem.Size = new Size(224, 26);
             replaceToolStripMenuItem.Text = "Replace (Ctrl + R)";
             replaceToolStripMenuItem.Click += replaceToolStripMenuItem_Click;
             // 
@@ -168,6 +168,7 @@
             Margin = new Padding(3, 4, 3, 4);
             Name = "FormMain";
             Text = "Notepad--";
+            FormClosing += FormMain_FormClosing;
             Load += Form1_Load;
             ResizeEnd += FormMain_ResizeEnd;
             menuStrip1.ResumeLayout(false);
