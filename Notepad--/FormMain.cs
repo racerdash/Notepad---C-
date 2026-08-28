@@ -97,11 +97,10 @@ namespace Notepad__
             switch (keyData)
             {
                 case (Keys.Control | Keys.S): //ctrl + s to save
-                    SaveFile();
-                    result = true;
+                    result = Data.SaveFile(this);
                     break;
                 case (Keys.Control | Keys.O): //ctrl + o to open
-                    OpenFile();
+                    Data.OpenFile(this);
                     result = true;
                     break;
                 case (Keys.Control | Keys.F): //ctrl + f to find
@@ -124,11 +123,6 @@ namespace Notepad__
             fileChanged = true;
         }
 
-        private void content_LostFocus(object sender, EventArgs e)
-        {
-
-        }
-
         //when save has been activated
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -138,105 +132,8 @@ namespace Notepad__
         //when open file has been activated
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFile(); 
+            Data.OpenFile(this); 
             
-        }
-
-        private bool SaveFile()
-        {
-            if (path != "")
-            {
-                File.WriteAllText(path, content.Text);
-                fileName.Text = "File: " + file;
-                isChanged.Text = "Text: saved";
-                fileChanged = false;
-
-                return true;
-            }
-            else
-            {
-                SaveFileDialog saveFile = new SaveFileDialog();
-                saveFile.Filter = "Text file|*.txt|All files|*.*";
-                saveFile.Title = "Save the written content";
-                saveFile.ShowDialog();
-                path = saveFile.FileName;
-
-                if (saveFile.FileName != "")
-                {
-                    File.WriteAllText(saveFile.FileName, content.Text);
-                    file = showFileNameOnly(path);
-                    fileName.Text = "File: " + file;
-                    isChanged.Text = "Text: saved";
-                    fileChanged = false;
-
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private void OpenFile()
-        {
-            OpenFileDialog openFile = new OpenFileDialog()
-            {
-                FileName = "",
-                Filter = "Text files|*.txt|All files|*.*",
-                Title = "Open a text file"
-            };
-            try
-            {
-                content.Text = string.Empty;
-                content.Clear();
-                content.ClearUndo();
-                openFile.ShowDialog();
-                path = openFile.FileName;
-                
-                if (path != "")
-                {
-                    content.Text = File.ReadAllText(path);
-                }
-
-                file = showFileNameOnly(path);
-                fileName.Text = "File: " + file;
-                
-                /*if(path != "")
-                {
-                    content.Text = "";
-
-                    StringBuilder sb = new StringBuilder();
-                    using (StreamReader read = new StreamReader(path))
-                    {
-                        string line;
-
-                        while ((line = read.ReadLine()) != null)
-                        {
-                            sb.Append(line);
-                        }
-                        content.Text = sb.ToString();
-                        file = showFileNameOnly(path);
-                        fileName.Text = "File: " + file;
-           
-                        //read.Dispose();
-                        read.Close();
-
-                    }
-                }*/
-
-                //HIGHLY UNORTHODOX, I DO NOT RECOMMEND THIS, WILL BE REWRITTEN IN A NEW ENGINE SOMETIME
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                GC.Collect();
-
-            } catch (OutOfMemoryException exception)
-            {
-                MessageBox.Show("File too big to be opened!", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            } catch (UnauthorizedAccessException exception)
-            {
-                MessageBox.Show("Not enough permissions to read the file!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            } catch (IOException exception)
-            {
-                MessageBox.Show("There was a problem when reading the file!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
         }
 
         public string showFileNameOnly(string pathFile)
